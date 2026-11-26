@@ -1,343 +1,88 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Flight Log 2.0</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#171717">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>STRIGH IND 3.0</title>
 <style>
-* {box-sizing:border-box}
-body {
- background:#101722;
- color:white;
- font-family:-apple-system,Arial,sans-serif;
- margin:0;
- padding:20px;
-}
-h1 {color:#60a5fa}
-small {color:#94a3b8}
-.stats {
- display:flex;
- gap:12px;
- margin-bottom:20px;
-}
-.card,.record {
- background:#1d2939;
- padding:16px;
- border-radius:16px;
- flex:1;
- margin-bottom:12px;
-}
-input,select,textarea,button {
- width:100%;
- padding:14px;
- margin:6px 0;
- border:0;
- border-radius:12px;
- font-size:16px;
-}
-input,select,textarea {
- background:#263548;
- color:white;
-}
-button {
- background:#2563eb;
- color:white;
- font-weight:bold;
-}
-label {color:#b5c5da}
-.green {background:#15803d}
-.red {background:#b91c1c}
-.gray {background:#475569}
-.part {
- display:flex;
- gap:6px;
- align-items:center;
-}
-.part input {width:75px}
-.part button {width:48px}
-.info {
- white-space:pre-wrap;
- overflow-wrap:anywhere;
- line-height:1.6;
-}
+:root{color-scheme:dark;--bg:#191919;--card:#222;--field:#2b2b2b;--line:#393939;--text:#f5f5f5;--muted:#aaa;--blue:#79a8ff;--accent:#477ee6;--green:#76d88c;--red:#f88787}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:3px}button:disabled{opacity:.5}main{max-width:720px;margin:auto;padding:22px 18px calc(100px + env(safe-area-inset-bottom));padding-top:max(22px,env(safe-area-inset-top))}header{display:flex;align-items:center;gap:12px}.brand{min-width:0;flex:1}.brand h1{font-size:24px;letter-spacing:-.6px;margin:0 0 4px}.brand p{font-size:14px;color:var(--muted);margin:0}.logo{width:58px;height:58px;border-radius:18px;background:#050505;display:grid;place-items:center;flex:none}.logo svg{width:46px;height:32px}.icon{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle;flex:none}.iconbtn{background:none;border:0;color:var(--text);padding:8px}.meta{display:flex;justify-content:space-between;align-items:center;margin:18px 0 0;padding-bottom:24px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}#status{color:var(--green);display:flex;align-items:center;gap:6px}#status.offline{color:var(--red)}#status::before{content:'';width:10px;height:10px;border-radius:50%;background:currentColor}.page[hidden]{display:none}h2{font-size:26px;letter-spacing:-.5px;margin:24px 0 16px}h3{font-size:18px;margin:0 0 12px}p{line-height:1.5}.muted,small{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tile,.card{background:var(--card);border:0;border-radius:21px;padding:16px;margin:0 0 12px;color:var(--text)}.tile{margin:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-height:119px;gap:8px}.tile .icon{color:var(--blue);width:25px;height:25px;margin-bottom:5px}.tile strong{font-size:19px}.tile small{font-size:14px;overflow-wrap:anywhere}.card{margin-top:14px}.chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;align-items:end;height:170px;padding-top:14px}.chart-col{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:end;height:100%;gap:9px}.track{width:100%;height:122px;display:flex;align-items:end;justify-content:center}.bar{width:72%;max-width:29px;background:linear-gradient(#5082e8,#3d5f9c);border-radius:7px;min-height:0}.day{font-size:12px;color:var(--muted)}.chart-value{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.stat{font-weight:700;font-size:25px;overflow-wrap:anywhere;margin-top:7px}.grid .card{margin:0}.primary,.secondary,.danger{border:0;border-radius:12px;padding:12px 14px;color:white;font-weight:600;width:100%;margin-top:9px;background:var(--accent)}.secondary{background:#353535;color:var(--text)}.danger{background:#402626;color:#ffaaaa}.actions{display:flex;gap:8px}.actions>*{flex:1}label{display:block;color:var(--muted);font-size:13px;margin-top:12px}input,select,textarea{width:100%;min-width:0;border:1px solid #363636;border-radius:12px;padding:12px;background:var(--field);color:var(--text);margin-top:5px;min-height:44px;font-size:16px}textarea{resize:vertical;min-height:76px}input[type=date]{appearance:none;-webkit-appearance:none}input[type=file]{font-size:14px}.record{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}.record strong{font-size:17px}.amount{color:var(--blue);font-size:23px;font-weight:700;margin-top:6px}.part-row{display:grid;grid-template-columns:minmax(0,1fr) 70px 42px;gap:7px;align-items:end}.part-row button{margin:0;min-height:44px}.notice{font-size:13px;color:var(--muted);line-height:1.5}.error{color:var(--red)}nav{position:fixed;bottom:0;left:0;right:0;background:#191919f5;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px 8px calc(8px + env(safe-area-inset-bottom));z-index:20}nav .inner{max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}nav button{min-width:0;color:var(--muted);background:none;border:0;padding:5px 0;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;white-space:nowrap}nav button .icon{width:23px;height:23px}nav button.active{color:var(--blue)}.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.section-head h2{margin-bottom:16px}.section-head button{width:auto}.empty{padding:12px 0;color:var(--muted)}.tag{color:var(--muted);font-size:13px}.divider{border-top:1px solid var(--line);margin:16px 0}@media(min-width:600px){main{padding-left:28px;padding-right:28px}.tile{min-height:140px;padding:20px}.chart{height:200px}.track{height:152px}nav button{font-size:13px}}@media(max-width:350px){.brand h1{font-size:20px}.brand p{font-size:12px}main{padding-left:12px;padding-right:12px}.tile{padding:12px}.tile strong{font-size:17px}nav button{font-size:10px}}
 </style>
 </head>
 <body>
-
-<h1>FLIGHT LOG <small>2.0</small></h1>
-<p>Журнал гражданских полётов</p>
-
-<div class="stats">
- <div class="card">
- Полёты
- <h2 id="total">0</h2>
- </div>
- <div class="card">
- Налёт, мин
- <h2 id="minutes">0</h2>
- </div>
-</div>
-
-<form id="form">
-<label>Дата</label>
-<input id="date" type="date" required>
-
-<label>Длительность полёта</label>
-<input id="duration" type="number" min="1" placeholder="Минуты" required>
-
-<label>Тип аккумулятора</label>
-<select id="batteryType">
-<option>LiPo</option>
-<option>Li-ion</option>
-<option>LiHV</option>
-<option>Другой</option>
-</select>
-
-<label>Ёмкость аккумулятора, мА·ч</label>
-<input id="capacity" type="number" min="1" list="capacities" placeholder="Выбрать или ввести" required>
-<datalist id="capacities">
-<option value="1500">
-<option value="2200">
-<option value="3000">
-<option value="5000">
-<option value="6000">
-<option value="7500">
-<option value="8000">
-<option value="10000">
-<option value="10500">
-<option value="12000">
-<option value="16000">
-<option value="22000">
-</datalist>
-
-<label>Номер или описание АКБ</label>
-<input id="battery" placeholder="Например, №1">
-
-<h3>Расход запчастей</h3>
-<small>Пустой список означает отсутствие расхода.</small>
-<div id="parts"></div>
-<button type="button" class="gray" id="addPart">+ Добавить запчасть</button>
-
-<label>Заметки</label>
-<textarea id="notes" placeholder="Комментарий"></textarea>
-
-<button id="submit" type="submit">+ Добавить запись</button>
-<button id="cancel" type="button" class="gray" hidden>Отменить редактирование</button>
-</form>
-
-<h2>История полётов</h2>
-<div id="history"></div>
-<button class="green" id="export">Экспорт CSV</button>
-
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10 12 3l9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6v15M12 6C9 3 5 3 2 4v15c4-1 7 0 10 2 3-2 6-3 10-2V4c-3-1-7-1-10 2z"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24"><path d="M20 8V5H5a2 2 0 0 1 0-4h13v4M5 5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h15v-6M16 9h6v7h-6a3.5 3.5 0 0 1 0-7zM17 12.5h.1"/></symbol>
+<symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="3"/><path d="M8 7h8M8 12h1m6 0h1M8 16h1m6 0h1M8 19h1m6 0h1"/></symbol>
+<symbol id="i-data" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="m10 2 4 0 1 3 3 1 3 0 2 4-2 2 0 2 2 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-2-4 2-2v-2l-2-2 2-4 3 0 3-1z" transform="translate(1 0) scale(.92)"/><circle cx="12" cy="12" r="3"/></symbol>
+</svg>
+<main>
+<header><div class="logo" aria-hidden="true"><svg viewBox="0 0 68 40" fill="none" stroke="white" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M26 15h16l8 6-8 7H26l-8-7zM18 21 8 16m42 5 10-5M26 28l-7 9m23-9 7 9M22 16l-6-6m30 6 6-6M3 10h16m30 0h16M2 15h12m40 0h12"/></svg></div><div class="brand"><h1>STRIGH IND</h1><p>Personal Engineering System</p></div><button class="iconbtn" aria-label="Настройки" data-go="settings"><svg class="icon"><use href="#i-settings"/></svg></button></header>
+<div class="meta"><span>Версия 3.0</span><span id="status">ONLINE</span></div>
+<div id="storageWarning" class="notice error" role="alert" hidden></div>
+<section id="home" class="page"><h2>Главная</h2><div class="grid">
+<button class="tile" data-go="journal"><svg class="icon"><use href="#i-book"/></svg><strong>Журнал</strong><small id="homeJournal">История записей</small></button>
+<button class="tile" data-go="finance"><svg class="icon"><use href="#i-wallet"/></svg><strong>Финансы</strong><small id="homeFinance">0 ₽</small></button>
+<button class="tile" data-go="tools"><svg class="icon"><use href="#i-calc"/></svg><strong>Инструменты</strong><small>Калькуляторы</small></button>
+<button class="tile" data-go="settings"><svg class="icon"><use href="#i-data"/></svg><strong>Данные</strong><small>Локальное хранилище</small></button>
+</div><div class="card"><h3>Расходы за неделю</h3><div class="chart" id="weeklyChart" aria-label="Расходы за семь дней"></div><p class="notice" id="weekCaption"></p></div></section>
+<section id="journal" class="page" hidden><h2>Журнал</h2><div class="grid"><div class="card"><small>Записи</small><div class="stat" id="logCount">0</div></div><div class="card"><small>Время, мин</small><div class="stat" id="logMinutes">0</div></div></div>
+<div class="card"><h3 id="lHeading">Добавить запись</h3><form id="logForm"><label>Дата<input id="lDate" type="date" required></label><label>Длительность, мин<input id="lDuration" type="number" min="1" step="1" required></label><label>Аккумулятор<input id="lBattery" placeholder="Название или номер"></label><label>Тип<select id="lType"><option value="">Не указан</option><option>LiPo</option><option>Li-ion</option><option>LiHV</option><option>Другой</option></select></label><label>Ёмкость, мА·ч<input id="lCapacity" type="number" min="1" step="1" placeholder="Необязательно"></label><div class="divider"></div><h3>Расход запчастей</h3><div id="lParts"></div><p class="notice" id="partsHint">Отсутствует</p><button type="button" class="secondary" id="addPart">+ Добавить позицию</button><label>Заметки<textarea id="lNotes" placeholder="Комментарий"></textarea></label><button class="primary" id="lSave">Сохранить запись</button><button type="button" class="secondary" id="lCancel" hidden>Отменить изменения</button></form></div><h3>История записей</h3><div id="logHistory"></div></section>
+<section id="finance" class="page" hidden><h2>Финансы</h2><div class="grid"><div class="card"><small>Сегодня</small><div class="stat" id="fToday"></div></div><div class="card"><small>7 дней</small><div class="stat" id="fWeek"></div></div><div class="card"><small>Месяц</small><div class="stat" id="fMonth"></div></div><div class="card"><small>Всего</small><div class="stat" id="fAll"></div></div></div><div class="card"><h3 id="fHeading">Новый расход</h3><form id="financeForm"><label>Дата<input type="date" id="fDate" required></label><label>Категория<select id="fCategory"><option>Комплектующие</option><option>Расходные материалы</option><option>Инструменты</option><option>Ремонт</option><option>Электроника</option><option>Транспорт</option><option>Прочее</option></select></label><label>Наименование<input id="fName" required></label><div class="grid"><label>Количество<input id="fQty" type="number" min="1" step="1" value="1" required></label><label>Цена за единицу, ₽<input id="fPrice" type="number" min="0" step="0.01" required></label></div><label>Комментарий<textarea id="fNotes"></textarea></label><button class="primary" id="fSave">Сохранить расход</button><button class="secondary" type="button" id="fCancel" hidden>Отменить изменения</button></form></div><h3>История расходов</h3><input id="fSearch" placeholder="Поиск по расходам"><select id="fPeriod"><option value="all">Всё время</option><option value="today">Сегодня</option><option value="week">Последние 7 дней</option><option value="month">Этот месяц</option></select><div id="financeHistory"></div><div class="card"><h3>Расходы по категориям</h3><div id="categoryList"></div></div></section>
+<section id="tools" class="page" hidden><h2>Расчёты</h2><div class="card"><h3>Стоимость покупки</h3><label>Количество<input id="calcQty" type="number" min="0" step="any" value="1"></label><label>Цена за единицу, ₽<input id="calcPrice" type="number" min="0" step="any" value="0"></label><div class="stat" id="calcTotal">0 ₽</div></div><div class="card"><h3>Перевод единиц длины</h3><label>Сантиметры<input id="calcCm" type="number" min="0" step="any" value="0"></label><div class="stat" id="calcInches">0 дюйм.</div></div></section>
+<section id="settings" class="page" hidden><h2>Настройки</h2><div class="card"><h3>Данные</h3><p class="notice">Журнал и расходы сохраняются в браузере. Для переноса на другой сайт или устройство используй резервную копию.</p><button class="primary" id="exportLog">Журнал — CSV</button><button class="primary" id="exportFinance">Финансы — CSV</button><button class="secondary" id="backup">Резервная копия JSON</button><label>Восстановить из JSON<input id="restore" type="file" accept=".json,application/json"></label><p class="notice">Восстановление заменяет соответствующие данные. Сначала сохрани текущую копию.</p></div><div class="card"><h3>STRIGH IND 3.0</h3><p class="notice">Индикатор показывает состояние подключения браузера, а не доступность конкретного сервера. Без сети можно работать, пока страница открыта. Повторный запуск без сети не гарантирован.</p></div></section>
+</main>
+<nav aria-label="Главное меню"><div class="inner"><button data-go="home" class="active"><svg class="icon"><use href="#i-home"/></svg>Главная</button><button data-go="journal"><svg class="icon"><use href="#i-book"/></svg>Журнал</button><button data-go="finance"><svg class="icon"><use href="#i-wallet"/></svg>Финансы</button><button data-go="tools"><svg class="icon"><use href="#i-calc"/></svg>Расчёты</button><button data-go="settings"><svg class="icon"><use href="#i-settings"/></svg>Настройки</button></div></nav>
 <script>
-const el = id => document.getElementById(id);
-let records = JSON.parse(localStorage.getItem('flightLog') || '[]');
-let editing = -1;
-
-const partNames = [
- 'Пропеллеры',
- 'Камера',
- 'Двигатель',
- 'Регулятор оборотов',
- 'Полётный контроллер',
- 'Антенна',
- 'Рама',
- 'Крепёж',
- 'Проводка',
- 'Разъём',
- 'Аккумулятор',
- 'Другое'
-];
-
-function addPart(name='Пропеллеры', qty=1) {
- const row=document.createElement('div');
- row.className='part';
-
- const select=document.createElement('select');
- const names=[...new Set([...partNames,name])];
-
- names.forEach(n=>{
-  select.add(new Option(n,n));
- });
-
- select.value=name;
-
- const input=document.createElement('input');
- input.type='number';
- input.min='1';
- input.required=true;
- input.value=qty;
-
- const btn=document.createElement('button');
- btn.type='button';
- btn.className='red';
- btn.textContent='×';
- btn.onclick=()=>row.remove();
-
- row.append(select,input,btn);
- el('parts').append(row);
-}
-
-el('addPart').onclick=()=>addPart();
-
-function save(){
- localStorage.setItem('flightLog',JSON.stringify(records));
- render();
-}
-
-function render(){
- el('total').textContent=records.length;
- el('minutes').textContent=records.reduce(
-  (s,r)=>s+Number(r.duration),0
- );
-
- el('history').replaceChildren();
-
- if(!records.length){
-  el('history').textContent='Пока нет записей';
- }
-
- records.forEach((r,i)=>{
-  const card=document.createElement('div');
-  card.className='record';
-
-  const info=document.createElement('div');
-  info.className='info';
-
-  const parts=(r.parts||[]).map(
-   p=>p.name+' — '+p.qty+' шт.'
-  ).join('\n')||'Отсутствует';
-
-  info.textContent=
-   'Дата: '+r.date+'\n'+
-   'Налёт: '+r.duration+' мин\n'+
-   'АКБ: '+(r.batteryType||'')+' '+
-   (r.capacity?r.capacity+' мА·ч ':'')+
-   (r.battery||'')+'\n'+
-   'Расход запчастей:\n'+parts+'\n'+
-   'Заметки: '+(r.notes||'—');
-
-  const edit=document.createElement('button');
-  edit.textContent='Редактировать';
-  edit.className='gray';
-  edit.onclick=()=>editRecord(i);
-
-  const del=document.createElement('button');
-  del.textContent='Удалить';
-  del.className='red';
-  del.onclick=()=>{
-   if(confirm('Удалить эту запись?')){
-    resetForm();
-    records.splice(i,1);
-    save();
-   }
-  };
-
-  card.append(info,edit,del);
-  el('history').prepend(card);
- });
-}
-
-function editRecord(i){
- const r=records[i];
- editing=i;
- el('date').value=r.date;
- el('duration').value=r.duration;
- el('batteryType').value=r.batteryType||'LiPo';
- el('capacity').value=r.capacity||'';
- el('battery').value=r.battery||'';
- el('notes').value=r.notes||'';
- el('parts').replaceChildren();
-
- (r.parts||[]).forEach(
-  p=>addPart(p.name,p.qty)
- );
-
- el('submit').textContent='Сохранить изменения';
- el('cancel').hidden=false;
- window.scrollTo(0,0);
-}
-
-function resetForm(){
- editing=-1;
- el('form').reset();
- el('parts').replaceChildren();
- el('submit').textContent='+ Добавить запись';
- el('cancel').hidden=true;
- const d=new Date();
- el('date').value=
- d.getFullYear()+'-'+
- String(d.getMonth()+1).padStart(2,'0')+'-'+
- String(d.getDate()).padStart(2,'0');
-}
-
-el('cancel').onclick=resetForm;
-
-el('form').onsubmit=e=>{
- e.preventDefault();
-
- const parts=[...document.querySelectorAll('.part')].map(row=>({
-  name:row.querySelector('select').value,
-  qty:Number(row.querySelector('input').value)
- }));
-
- const record={
-  date:el('date').value,
-  duration:Number(el('duration').value),
-  batteryType:el('batteryType').value,
-  capacity:Number(el('capacity').value),
-  battery:el('battery').value,
-  notes:el('notes').value,
-  parts:parts
- };
-
- if(editing>=0){
-  records[editing]=record;
- }else{
-  records.push(record);
- }
-
- save();
- resetForm();
-};
-
-el('export').onclick=()=>{
- const rows=[
- ['Дата','Налёт (мин)','Тип АКБ','Ёмкость (мАч)','Номер АКБ','Запчасти','Заметки'],
- ...records.map(r=>[
-  r.date,
-  r.duration,
-  r.batteryType||'',
-  r.capacity||'',
-  r.battery||'',
-  (r.parts||[]).map(p=>p.name+' × '+p.qty).join('; ')||'Отсутствует',
-  r.notes||''
- ])
- ];
-
- const csv=rows.map(row=>row.map(v=>{
-  let s=String(v);
-  if(/^[=+\-@\t\r]/.test(s)) s="'"+s;
-  return '"'+s.replace(/"/g,'""')+'"';
- }).join(',')).join('\r\n');
-
- const blob=new Blob(['\uFEFF'+csv],{
-  type:'text/csv;charset=utf-8'
- });
-
- const url=URL.createObjectURL(blob);
- const a=document.createElement('a');
- a.href=url;
- a.download='FlightLog.csv';
- document.body.appendChild(a);
- a.click();
- a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),1000);
-};
-
-resetForm();
-render();
+'use strict';
+const $=id=>document.getElementById(id), LK='flightLog', FK='equipmentLogV3';
+function warn(s){$('storageWarning').textContent=s;$('storageWarning').hidden=!s;}
+function read(key){try{const a=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(a))throw Error();return a;}catch(e){warn('Не удалось прочитать локальные данные. Проверь хранилище и резервные копии.');return [];}}
+let logs=read(LK),finances=read(FK),editLog=-1,editFinance=-1;
+function commit(key,next){try{localStorage.setItem(key,JSON.stringify(next));if(key===LK)logs=next;else finances=next;return true;}catch(e){warn('Не удалось сохранить запись. Проверь настройки хранилища.');return false;}}
+const dateStr=(d=new Date())=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const today=()=>dateStr(), past=n=>{const d=new Date();d.setDate(d.getDate()-n);return dateStr(d);};
+const number=n=>Number(n).toLocaleString('ru-RU',{maximumFractionDigits:2});
+const money=n=>number(n)+' ₽', cost=r=>Math.round(Number(r.qty)*Number(r.price)*100)/100, sum=rs=>Math.round(rs.reduce((s,r)=>s+cost(r),0)*100)/100;
+function filter(rs,p){const t=today();return rs.filter(r=>p==='all'||(p==='today'?r.date===t:p==='week'?r.date>=past(6)&&r.date<=t:r.date.slice(0,7)===t.slice(0,7)&&r.date<=t));}
+function updateStatus(){const on=navigator.onLine;$('status').textContent=on?'ONLINE':'OFFLINE';$('status').classList.toggle('offline',!on);}
+window.addEventListener('online',updateStatus);window.addEventListener('offline',updateStatus);
+function go(id){document.querySelectorAll('.page').forEach(p=>p.hidden=p.id!==id);document.querySelectorAll('nav button').forEach(b=>{const active=b.dataset.go===id;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});window.scrollTo(0,0);render();}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+function elem(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;}
+function button(text,cls,fn){const b=elem('button',text,cls);b.type='button';b.onclick=fn;return b;}
+function empty(parent,text='Пока нет записей'){parent.append(elem('div',text,'empty'));}
+function order(rs){return rs.map((r,i)=>({r,i})).sort((a,b)=>String(b.r.date).localeCompare(String(a.r.date))||b.i-a.i);}
+const names=['Пропеллеры','Камера','Двигатель','Регулятор оборотов','Полётный контроллер','Антенна','Рама','Крепёж','Проводка','Разъём','Аккумулятор','Другое'];
+function partHint(){$('partsHint').hidden=$('lParts').children.length>0;}
+function addPart(name=names[0],qty=1){const row=elem('div',undefined,'part-row'),sel=elem('select'),n=elem('input');[...new Set([...names,name])].forEach(v=>sel.add(new Option(v,v)));sel.value=name;sel.setAttribute('aria-label','Запчасть');n.type='number';n.min='1';n.step='1';n.required=true;n.value=qty;n.setAttribute('aria-label','Количество');row.append(sel,n,button('×','danger',()=>{row.remove();partHint();}));$('lParts').append(row);partHint();}
+$('addPart').onclick=()=>addPart();
+function resetLog(){editLog=-1;$('logForm').reset();$('lDate').value=today();$('lParts').replaceChildren();partHint();$('lHeading').textContent='Добавить запись';$('lSave').textContent='Сохранить запись';$('lCancel').hidden=true;}
+$('lCancel').onclick=resetLog;
+function loadLog(i){const r=logs[i];editLog=i;$('lDate').value=r.date;$('lDuration').value=r.duration;$('lBattery').value=r.battery||'';$('lType').value=r.batteryType||'';$('lCapacity').value=r.capacity||'';$('lNotes').value=r.notes||'';$('lParts').replaceChildren();(r.parts||[]).forEach(p=>addPart(p.name,p.qty));partHint();$('lHeading').textContent='Редактирование записи';$('lSave').textContent='Сохранить изменения';$('lCancel').hidden=false;window.scrollTo(0,0);}
+$('logForm').onsubmit=e=>{e.preventDefault();const r={date:$('lDate').value,duration:Number($('lDuration').value),battery:$('lBattery').value.trim(),batteryType:$('lType').value,capacity:$('lCapacity').value?Number($('lCapacity').value):null,notes:$('lNotes').value,parts:[...$('lParts').children].map(row=>({name:row.querySelector('select').value,qty:Number(row.querySelector('input').value)}))};const next=logs.slice();if(editLog<0)next.push(r);else next[editLog]={...next[editLog],...r};if(commit(LK,next)){resetLog();render();}};
+function renderLogs(){$('logCount').textContent=logs.length;$('logMinutes').textContent=number(logs.reduce((s,r)=>s+(Number(r.duration)||0),0));$('homeJournal').textContent=logs.length?`${logs.length} · записей`:'История записей';const box=$('logHistory');box.replaceChildren();if(!logs.length)empty(box);order(logs).forEach(({r,i})=>{const card=elem('div',undefined,'card record');card.append(elem('strong',r.date),elem('div',`Время: ${r.duration} мин\nАКБ: ${[r.batteryType,r.capacity?`${r.capacity} мА·ч`:'',r.battery].filter(Boolean).join(' · ')||'—'}\nРасход запчастей: ${(r.parts||[]).map(p=>`${p.name} × ${p.qty}`).join(', ')||'Отсутствует'}\n${r.notes||''}`));const actions=elem('div',undefined,'actions');actions.append(button('Редактировать','secondary',()=>loadLog(i)),button('Удалить','danger',()=>{if(confirm('Удалить запись?')&&commit(LK,logs.filter((_,j)=>i!==j))){resetLog();render();}}));card.append(actions);box.append(card);});}
+function resetFinance(){editFinance=-1;$('financeForm').reset();$('fDate').value=today();$('fHeading').textContent='Новый расход';$('fSave').textContent='Сохранить расход';$('fCancel').hidden=true;}
+$('fCancel').onclick=resetFinance;
+function loadFinance(i){const r=finances[i];editFinance=i;$('fDate').value=r.date;$('fCategory').value=r.category;$('fName').value=r.name;$('fQty').value=r.qty;$('fPrice').value=r.price;$('fNotes').value=r.notes||'';$('fHeading').textContent='Редактирование расхода';$('fSave').textContent='Сохранить изменения';$('fCancel').hidden=false;window.scrollTo(0,0);}
+$('financeForm').onsubmit=e=>{e.preventDefault();const r={id:editFinance>=0?finances[editFinance].id:String(Date.now()),date:$('fDate').value,category:$('fCategory').value,name:$('fName').value.trim(),qty:Number($('fQty').value),price:Number($('fPrice').value),notes:$('fNotes').value};if(!r.name){$('fName').focus();return;}const next=finances.slice();if(editFinance<0)next.push(r);else next[editFinance]={...next[editFinance],...r};if(commit(FK,next)){resetFinance();render();}};
+$('fSearch').oninput=renderFinance;$('fPeriod').onchange=renderFinance;
+function renderFinance(){const total=sum(finances),week=sum(filter(finances,'week'));$('homeFinance').textContent=money(total);$('fToday').textContent=money(sum(filter(finances,'today')));$('fWeek').textContent=money(week);$('fMonth').textContent=money(sum(filter(finances,'month')));$('fAll').textContent=money(total);const box=$('financeHistory');box.replaceChildren();const q=$('fSearch').value.trim().toLowerCase(),p=$('fPeriod').value;const visible=order(finances).filter(({r})=>filter([r],p).length&&[r.name,r.category,r.notes].join(' ').toLowerCase().includes(q));if(!visible.length)empty(box);visible.forEach(({r,i})=>{const card=elem('div',undefined,'card record');card.append(elem('strong',r.name),elem('div',`${r.date} · ${r.category}\n${r.qty} × ${money(r.price)}\n${r.notes||''}`),elem('div',money(cost(r)),'amount'));const actions=elem('div',undefined,'actions');actions.append(button('Редактировать','secondary',()=>loadFinance(i)),button('Удалить','danger',()=>{if(confirm('Удалить расход?')&&commit(FK,finances.filter((_,j)=>i!==j))){resetFinance();render();}}));card.append(actions);box.append(card);});const cats=new Map();finances.forEach(r=>cats.set(r.category,(cats.get(r.category)||0)+cost(r)));const catBox=$('categoryList');catBox.replaceChildren();if(!cats.size)empty(catBox);[...cats].sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>catBox.append(elem('p',`${k} — ${money(v)}`)));renderChart(week);}
+function renderChart(week){const days=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return {label:['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()],date:dateStr(d),value:sum(finances.filter(r=>r.date===dateStr(d)))};});const max=Math.max(1,...days.map(d=>d.value));const chart=$('weeklyChart');chart.replaceChildren();days.forEach(d=>{const col=elem('div',undefined,'chart-col'),track=elem('div',undefined,'track'),bar=elem('div',undefined,'bar');bar.style.height=(d.value/max*100)+'%';track.append(bar);col.title=`${d.date}: ${money(d.value)}`;col.append(elem('div',d.value?number(d.value):'0','chart-value'),track,elem('span',d.label,'day'));chart.append(col);});$('weekCaption').textContent='Всего за последние 7 дней: '+money(week);}
+function render(){renderLogs();renderFinance();}
+function calc(){const q=Number($('calcQty').value),p=Number($('calcPrice').value),c=Number($('calcCm').value);$('calcTotal').textContent=q>=0&&p>=0&&Number.isFinite(q*p)?money(q*p):'—';$('calcInches').textContent=c>=0&&Number.isFinite(c)?number(c/2.54)+' дюйм.':'—';}
+['calcQty','calcPrice','calcCm'].forEach(id=>$(id).oninput=calc);
+function download(name,content,type){const u=URL.createObjectURL(new Blob([content],{type}));const a=elem('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);}
+function csv(rows){return '\uFEFF'+rows.map(r=>r.map(v=>{let s=String(v??'');if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}).join(',')).join('\r\n');}
+$('exportLog').onclick=()=>download('STRIGH-journal.csv',csv([['Дата','Время (мин)','Тип АКБ','Ёмкость (мАч)','АКБ','Запчасти','Заметки'],...logs.map(r=>[r.date,r.duration,r.batteryType,r.capacity,r.battery,(r.parts||[]).map(p=>`${p.name} × ${p.qty}`).join('; '),r.notes])]),'text/csv;charset=utf-8');
+$('exportFinance').onclick=()=>download('STRIGH-finance.csv',csv([['Дата','Категория','Название','Количество','Цена','Сумма','Комментарий'],...finances.map(r=>[r.date,r.category,r.name,r.qty,r.price,cost(r),r.notes])]),'text/csv;charset=utf-8');
+$('backup').onclick=()=>download('STRIGH-backup.json',JSON.stringify({version:3,logs,finances},null,2),'application/json');
+const isDate=d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d), isLog=r=>r&&isDate(r.date)&&Number.isFinite(Number(r.duration))&&Number(r.duration)>0&&(!r.parts||Array.isArray(r.parts)&&r.parts.every(p=>p&&typeof p.name==='string'&&Number(p.qty)>0)),isFinance=r=>r&&isDate(r.date)&&typeof r.name==='string'&&typeof r.category==='string'&&Number.isFinite(r.qty)&&r.qty>0&&Number.isFinite(r.price)&&r.price>=0;
+$('restore').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const d=JSON.parse(await file.text());let l=null,f=null;if(Array.isArray(d)){if(d.length&&d.every(isFinance))f=d;else if(d.length&&d.every(isLog))l=d;else throw Error();}else{if(Array.isArray(d.logs)&&d.logs.every(isLog))l=d.logs;else if(d.logs!==undefined)throw Error();if(Array.isArray(d.finances)&&d.finances.every(isFinance))f=d.finances;else if(d.finances!==undefined)throw Error();if(l===null&&f===null)throw Error();}if(confirm('Заменить соответствующие записи данными из файла?')){let ok=true;if(l!==null)ok=commit(LK,l)&&ok;if(f!==null)ok=commit(FK,f)&&ok;resetLog();resetFinance();render();alert(ok?'Копия восстановлена':'Часть данных не удалось сохранить.');}}catch(err){alert('Некорректный файл резервной копии.');}finally{e.target.value='';}};
+resetLog();resetFinance();updateStatus();calc();render();
 </script>
 </body>
 </html>
