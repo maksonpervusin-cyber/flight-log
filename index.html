@@ -1,440 +1,343 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js');
-}
-</script>
-  <link rel="apple-touch-icon" href="A07EC77F-2F17-4D9C-A032-C9BDBDC1E54D.png">
-<link rel="icon" type="image/png" href="A07EC77F-2F17-4D9C-A032-C9BDBDC1E54D.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flight Log 2.0</title>
 <style>
-* { box-sizing: border-box; }
+* {box-sizing:border-box}
 body {
-  background: #101722;
-  color: white;
-  font-family: -apple-system, Arial, sans-serif;
-  padding: 16px;
-  max-width: 650px;
-  margin: auto;
+ background:#101722;
+ color:white;
+ font-family:-apple-system,Arial,sans-serif;
+ margin:0;
+ padding:20px;
 }
-h1 { color: #60a5fa; margin-bottom: 5px; }
-small { color: #94a3b8; }
+h1 {color:#60a5fa}
+small {color:#94a3b8}
 .stats {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
+ display:flex;
+ gap:12px;
+ margin-bottom:20px;
 }
-.card, .record, form {
-  background: #1d2939;
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 12px;
+.card,.record {
+ background:#1d2939;
+ padding:16px;
+ border-radius:16px;
+ flex:1;
+ margin-bottom:12px;
 }
-.card { flex: 1; }
-.card h2 {
-  color: #60a5fa;
-  margin-bottom: 0;
+input,select,textarea,button {
+ width:100%;
+ padding:14px;
+ margin:6px 0;
+ border:0;
+ border-radius:12px;
+ font-size:16px;
 }
-input, select, textarea, button {
-  width: 100%;
-  padding: 13px;
-  margin: 6px 0;
-  border: 0;
-  border-radius: 10px;
-  font-size: 16px;
-}
-input, select, textarea {
-  background: #304056;
-  color: white;
-}
-input::placeholder, textarea::placeholder {
-  color: #b0bdce;
+input,select,textarea {
+ background:#263548;
+ color:white;
 }
 button {
-  background: #2563eb;
-  color: white;
-  font-weight: bold;
+ background:#2563eb;
+ color:white;
+ font-weight:bold;
 }
-label {
-  display: block;
-  margin-top: 10px;
-  color: #b8c7da;
-  font-size: 14px;
+label {color:#b5c5da}
+.green {background:#15803d}
+.red {background:#b91c1c}
+.gray {background:#475569}
+.part {
+ display:flex;
+ gap:6px;
+ align-items:center;
 }
-.delete { background: #b91c1c; }
-.secondary { background: #475569; }
-.export { background: #047857; }
-.row {
-  display: flex;
-  gap: 8px;
-}
-.row > * { flex: 1; min-width: 0; }
-.details {
-  white-space: pre-wrap;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
+.part input {width:75px}
+.part button {width:48px}
+.info {
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ line-height:1.6;
 }
 </style>
 </head>
 <body>
 
-<h1>FLIGHT LOG 2.0</h1>
-<small>Журнал гражданских полётов</small>
+<h1>FLIGHT LOG <small>2.0</small></h1>
+<p>Журнал гражданских полётов</p>
 
 <div class="stats">
-  <div class="card">
-    Полёты
-    <h2 id="total">0</h2>
-  </div>
-  <div class="card">
-    Налёт, мин
-    <h2 id="minutes">0</h2>
-  </div>
+ <div class="card">
+ Полёты
+ <h2 id="total">0</h2>
+ </div>
+ <div class="card">
+ Налёт, мин
+ <h2 id="minutes">0</h2>
+ </div>
 </div>
 
 <form id="form">
+<label>Дата</label>
+<input id="date" type="date" required>
 
-  <label>Дата</label>
-  <input id="date" type="date" required>
+<label>Длительность полёта</label>
+<input id="duration" type="number" min="1" placeholder="Минуты" required>
 
-  <label>Длительность полёта</label>
-  <input id="duration" type="number"
-    min="1" placeholder="Минуты" required>
+<label>Тип аккумулятора</label>
+<select id="batteryType">
+<option>LiPo</option>
+<option>Li-ion</option>
+<option>LiHV</option>
+<option>Другой</option>
+</select>
 
-  <label>Тип аккумулятора</label>
-  <select id="batteryType">
-    <option>LiPo</option>
-    <option>LiHV</option>
-    <option>Li-ion</option>
-    <option>Другой</option>
-  </select>
+<label>Ёмкость аккумулятора, мА·ч</label>
+<input id="capacity" type="number" min="1" list="capacities" placeholder="Выбрать или ввести" required>
+<datalist id="capacities">
+<option value="1500">
+<option value="2200">
+<option value="3000">
+<option value="5000">
+<option value="6000">
+<option value="7500">
+<option value="8000">
+<option value="10000">
+<option value="10500">
+<option value="12000">
+<option value="16000">
+<option value="22000">
+</datalist>
 
-  <label>Ёмкость аккумулятора, мА·ч</label>
-  <input id="capacity" type="number"
-    min="1" list="capacities"
-    placeholder="Выбрать или ввести">
+<label>Номер или описание АКБ</label>
+<input id="battery" placeholder="Например, №1">
 
-  <datalist id="capacities">
-    <option value="1500">
-    <option value="2200">
-    <option value="3000">
-    <option value="5000">
-    <option value="6000">
-    <option value="7500">
-    <option value="10000">
-    <option value="10500">
-    <option value="12000">
-    <option value="16000">
-    <option value="22000">
-  </datalist>
+<h3>Расход запчастей</h3>
+<small>Пустой список означает отсутствие расхода.</small>
+<div id="parts"></div>
+<button type="button" class="gray" id="addPart">+ Добавить запчасть</button>
 
-  <label>Маркировка аккумулятора</label>
-  <input id="battery"
-    placeholder="Название или номер АКБ">
+<label>Заметки</label>
+<textarea id="notes" placeholder="Комментарий"></textarea>
 
-  <label>Расход запчастей</label>
-
-  <div class="row">
-    <select id="part">
-      <option>Отсутствует</option>
-      <option>Пропеллер</option>
-      <option>Камера</option>
-      <option>Корпус</option>
-      <option>Крепление</option>
-      <option>Кабель</option>
-      <option>Разъём</option>
-      <option>Другая деталь</option>
-    </select>
-
-    <input id="quantity" type="number"
-      min="1" value="1">
-  </div>
-
-  <button type="button" class="secondary"
-    id="addPart">+ Добавить деталь</button>
-
-  <div id="partsList"></div>
-
-  <label>Заметки</label>
-  <textarea id="notes"
-    placeholder="Комментарий"></textarea>
-
-  <button id="save" type="submit">
-    + Добавить запись
-  </button>
-
-  <button id="cancel" type="button"
-    class="secondary" hidden>
-    Отменить редактирование
-  </button>
-
+<button id="submit" type="submit">+ Добавить запись</button>
+<button id="cancel" type="button" class="gray" hidden>Отменить редактирование</button>
 </form>
-
-<button class="export" id="export">
-  Экспорт в CSV
-</button>
 
 <h2>История полётов</h2>
 <div id="history"></div>
+<button class="green" id="export">Экспорт CSV</button>
 
 <script>
 const el = id => document.getElementById(id);
-
-let records = [];
-
-try {
-  records = JSON.parse(
-    localStorage.getItem('flightLog') || '[]'
-  );
-  if (!Array.isArray(records)) records = [];
-} catch {
-  records = [];
-}
-
+let records = JSON.parse(localStorage.getItem('flightLog') || '[]');
 let editing = -1;
-let parts = [];
 
-function saveData() {
-  try {
-    localStorage.setItem(
-      'flightLog', JSON.stringify(records)
-    );
-  } catch {
-    alert('Не удалось сохранить данные.');
-  }
+const partNames = [
+ 'Пропеллеры',
+ 'Камера',
+ 'Двигатель',
+ 'Регулятор оборотов',
+ 'Полётный контроллер',
+ 'Антенна',
+ 'Рама',
+ 'Крепёж',
+ 'Проводка',
+ 'Разъём',
+ 'Аккумулятор',
+ 'Другое'
+];
+
+function addPart(name='Пропеллеры', qty=1) {
+ const row=document.createElement('div');
+ row.className='part';
+
+ const select=document.createElement('select');
+ const names=[...new Set([...partNames,name])];
+
+ names.forEach(n=>{
+  select.add(new Option(n,n));
+ });
+
+ select.value=name;
+
+ const input=document.createElement('input');
+ input.type='number';
+ input.min='1';
+ input.required=true;
+ input.value=qty;
+
+ const btn=document.createElement('button');
+ btn.type='button';
+ btn.className='red';
+ btn.textContent='×';
+ btn.onclick=()=>row.remove();
+
+ row.append(select,input,btn);
+ el('parts').append(row);
 }
 
-function setDate() {
-  const d = new Date();
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  el('date').value = d.toISOString().slice(0, 10);
+el('addPart').onclick=()=>addPart();
+
+function save(){
+ localStorage.setItem('flightLog',JSON.stringify(records));
+ render();
 }
 
-function renderParts() {
-  el('partsList').replaceChildren();
+function render(){
+ el('total').textContent=records.length;
+ el('minutes').textContent=records.reduce(
+  (s,r)=>s+Number(r.duration),0
+ );
 
-  parts.forEach((p, i) => {
-    const row = document.createElement('div');
-    row.className = 'row';
+ el('history').replaceChildren();
 
-    const text = document.createElement('p');
-    text.textContent = p.name + ' × ' + p.qty;
+ if(!records.length){
+  el('history').textContent='Пока нет записей';
+ }
 
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'delete';
-    btn.textContent = 'Убрать';
-    btn.onclick = () => {
-      parts.splice(i, 1);
-      renderParts();
-    };
+ records.forEach((r,i)=>{
+  const card=document.createElement('div');
+  card.className='record';
 
-    row.append(text, btn);
-    el('partsList').appendChild(row);
-  });
-}
+  const info=document.createElement('div');
+  info.className='info';
 
-el('addPart').onclick = () => {
-  const name = el('part').value;
-  const qty = Number(el('quantity').value);
+  const parts=(r.parts||[]).map(
+   p=>p.name+' — '+p.qty+' шт.'
+  ).join('\n')||'Отсутствует';
 
-  if (name === 'Отсутствует') {
-    parts = [];
-  } else {
-    if (!Number.isInteger(qty) || qty < 1) {
-      alert('Укажи количество деталей');
-      return;
-    }
+  info.textContent=
+   'Дата: '+r.date+'\n'+
+   'Налёт: '+r.duration+' мин\n'+
+   'АКБ: '+(r.batteryType||'')+' '+
+   (r.capacity?r.capacity+' мА·ч ':'')+
+   (r.battery||'')+'\n'+
+   'Расход запчастей:\n'+parts+'\n'+
+   'Заметки: '+(r.notes||'—');
 
-    const existing = parts.find(p => p.name === name);
+  const edit=document.createElement('button');
+  edit.textContent='Редактировать';
+  edit.className='gray';
+  edit.onclick=()=>editRecord(i);
 
-    if (existing) {
-      existing.qty += qty;
-    } else {
-      parts.push({name, qty});
-    }
-  }
-
-  renderParts();
-};
-
-function resetForm() {
-  editing = -1;
-  parts = [];
-  el('form').reset();
-  el('save').textContent = '+ Добавить запись';
-  el('cancel').hidden = true;
-  setDate();
-  renderParts();
-}
-
-function editRecord(i) {
-  const r = records[i];
-
-  editing = i;
-
-  el('date').value = r.date;
-  el('duration').value = r.duration;
-  el('batteryType').value = r.batteryType || 'LiPo';
-  el('capacity').value = r.capacity || '';
-  el('battery').value = r.battery || '';
-  el('notes').value = r.notes || '';
-
-  parts = (r.parts || []).map(p => ({...p}));
-
-  el('save').textContent = 'Сохранить изменения';
-  el('cancel').hidden = false;
-
-  renderParts();
-
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-}
-
-el('cancel').onclick = resetForm;
-
-function deleteRecord(i) {
-  if (!confirm('Удалить эту запись?')) return;
-
-  records.splice(i, 1);
-  resetForm();
-  saveData();
-  render();
-}
-
-function partText(r) {
-  return r.parts && r.parts.length
-    ? r.parts.map(
-        p => p.name + ' × ' + p.qty
-      ).join(', ')
-    : 'Отсутствует';
-}
-
-function render() {
-  el('total').textContent = records.length;
-
-  el('minutes').textContent = records.reduce(
-    (sum, r) => sum + Number(r.duration || 0), 0
-  );
-
-  el('history').replaceChildren();
-
-  for (let i = records.length - 1; i >= 0; i--) {
-    const r = records[i];
-
-    const card = document.createElement('div');
-    card.className = 'record';
-
-    const details = document.createElement('div');
-    details.className = 'details';
-
-    details.textContent =
-      'Дата: ' + r.date + '\n' +
-      'Налёт: ' + r.duration + ' мин\n' +
-      'АКБ: ' + (r.batteryType || '') +
-      ' ' + (r.battery || '') + '\n' +
-      'Ёмкость: ' +
-      (r.capacity ? r.capacity + ' мА·ч' : 'Не указана') +
-      '\nРасход: ' + partText(r) +
-      '\nЗаметки: ' + (r.notes || 'Нет');
-
-    const row = document.createElement('div');
-    row.className = 'row';
-
-    const edit = document.createElement('button');
-    edit.textContent = 'Редактировать';
-    edit.onclick = () => editRecord(i);
-
-    const del = document.createElement('button');
-    del.className = 'delete';
-    del.textContent = 'Удалить';
-    del.onclick = () => deleteRecord(i);
-
-    row.append(edit, del);
-    card.append(details, row);
-
-    el('history').appendChild(card);
-  }
-}
-
-el('form').onsubmit = e => {
-  e.preventDefault();
-
-  const record = {
-    date: el('date').value,
-    duration: Number(el('duration').value),
-    batteryType: el('batteryType').value,
-    capacity: el('capacity').value,
-    battery: el('battery').value,
-    parts: parts.map(p => ({...p})),
-    notes: el('notes').value
+  const del=document.createElement('button');
+  del.textContent='Удалить';
+  del.className='red';
+  del.onclick=()=>{
+   if(confirm('Удалить эту запись?')){
+    resetForm();
+    records.splice(i,1);
+    save();
+   }
   };
 
-  if (editing >= 0) {
-    records[editing] = record;
-  } else {
-    records.push(record);
-  }
+  card.append(info,edit,del);
+  el('history').prepend(card);
+ });
+}
 
-  saveData();
-  resetForm();
-  render();
+function editRecord(i){
+ const r=records[i];
+ editing=i;
+ el('date').value=r.date;
+ el('duration').value=r.duration;
+ el('batteryType').value=r.batteryType||'LiPo';
+ el('capacity').value=r.capacity||'';
+ el('battery').value=r.battery||'';
+ el('notes').value=r.notes||'';
+ el('parts').replaceChildren();
+
+ (r.parts||[]).forEach(
+  p=>addPart(p.name,p.qty)
+ );
+
+ el('submit').textContent='Сохранить изменения';
+ el('cancel').hidden=false;
+ window.scrollTo(0,0);
+}
+
+function resetForm(){
+ editing=-1;
+ el('form').reset();
+ el('parts').replaceChildren();
+ el('submit').textContent='+ Добавить запись';
+ el('cancel').hidden=true;
+ const d=new Date();
+ el('date').value=
+ d.getFullYear()+'-'+
+ String(d.getMonth()+1).padStart(2,'0')+'-'+
+ String(d.getDate()).padStart(2,'0');
+}
+
+el('cancel').onclick=resetForm;
+
+el('form').onsubmit=e=>{
+ e.preventDefault();
+
+ const parts=[...document.querySelectorAll('.part')].map(row=>({
+  name:row.querySelector('select').value,
+  qty:Number(row.querySelector('input').value)
+ }));
+
+ const record={
+  date:el('date').value,
+  duration:Number(el('duration').value),
+  batteryType:el('batteryType').value,
+  capacity:Number(el('capacity').value),
+  battery:el('battery').value,
+  notes:el('notes').value,
+  parts:parts
+ };
+
+ if(editing>=0){
+  records[editing]=record;
+ }else{
+  records.push(record);
+ }
+
+ save();
+ resetForm();
 };
 
-el('export').onclick = () => {
-  const rows = [
-    ['Дата', 'Налёт', 'Тип АКБ',
-     'Ёмкость', 'Маркировка',
-     'Запчасти', 'Заметки']
-  ];
+el('export').onclick=()=>{
+ const rows=[
+ ['Дата','Налёт (мин)','Тип АКБ','Ёмкость (мАч)','Номер АКБ','Запчасти','Заметки'],
+ ...records.map(r=>[
+  r.date,
+  r.duration,
+  r.batteryType||'',
+  r.capacity||'',
+  r.battery||'',
+  (r.parts||[]).map(p=>p.name+' × '+p.qty).join('; ')||'Отсутствует',
+  r.notes||''
+ ])
+ ];
 
-  records.forEach(r => {
-    rows.push([
-      r.date,
-      r.duration,
-      r.batteryType || '',
-      r.capacity || '',
-      r.battery || '',
-      partText(r),
-      r.notes || ''
-    ]);
-  });
+ const csv=rows.map(row=>row.map(v=>{
+  let s=String(v);
+  if(/^[=+\-@\t\r]/.test(s)) s="'"+s;
+  return '"'+s.replace(/"/g,'""')+'"';
+ }).join(',')).join('\r\n');
 
-  const csv = rows.map(row =>
-    row.map(value => {
-      let s = String(value);
-      if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
-      return '"' + s.replace(/"/g, '""') + '"';
-    }).join(';')
-  ).join('\r\n');
+ const blob=new Blob(['\uFEFF'+csv],{
+  type:'text/csv;charset=utf-8'
+ });
 
-  const blob = new Blob(
-    ['\uFEFF' + csv],
-    {type: 'text/csv;charset=utf-8;'}
-  );
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-
-  link.href = url;
-  link.download = 'FlightLog.csv';
-
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  setTimeout(() => URL.revokeObjectURL(url), 10000);
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url;
+ a.download='FlightLog.csv';
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 
-setDate();
+resetForm();
 render();
 </script>
-
 </body>
 </html>
